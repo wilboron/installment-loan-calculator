@@ -5,7 +5,7 @@
             [muuntaja.core :as m]))
 
 
-(deftest your-handler-test
+(deftest app-test
   (testing "Health route"
     (let [response (app (mock/request :get "/health"))
           status (get response :status)
