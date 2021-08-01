@@ -24,6 +24,8 @@
 
 
 (defn- payment-breakdown
+  "Breakdown a loan installment in payment amount, interest, principal
+  and current balance"
   [balance interest-rate payment-amount]
   (let [interest (* balance interest-rate)
         principal (- payment-amount interest)
@@ -54,12 +56,15 @@
     (amortization-schedule-calculator total-loan interest-rate period payment-amount)))
 
 (defn number->string-with-precision-2
+  "Convert number to string, if float use 2 decimal precision"
   [number]
   (if (integer? number)
     (str number)
     (format "%.2f" number)))
 
 (defn format-payment-breakdown-to-string
+  "Format a payment breakdown map number values to string.
+  If float use 2 decimal precision."
   [payment-breakdown]
   (reduce
     (fn [current-map [k v]]
@@ -68,6 +73,7 @@
     payment-breakdown))
 
 (defn format-to-string-amortization-schedule
+  "Format amortization schedule payments breakdown map values to string"
   [amortization-schedule]
   (map
     format-payment-breakdown-to-string
