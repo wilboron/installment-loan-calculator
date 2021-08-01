@@ -55,7 +55,7 @@
   (let [payment-amount (payment-amount total-loan interest-rate period)]
     (amortization-schedule-calculator total-loan interest-rate period payment-amount)))
 
-(defn number->string-with-precision-2
+(defn format-with-precision-2
   "Convert number to string, if float use 2 decimal precision"
   [number]
   (if (integer? number)
@@ -68,7 +68,7 @@
   [payment-breakdown]
   (reduce
     (fn [current-map [k v]]
-      (assoc current-map k (number->string-with-precision-2 v)))
+      (assoc current-map k (format-with-precision-2 v)))
     {}
     payment-breakdown))
 
@@ -78,3 +78,45 @@
   (map
     format-payment-breakdown-to-string
     amortization-schedule))
+
+(defn total-loan-interest
+  "Calculate total loan interest that will be paid
+  at the end of the loan"
+  [amortization-schedule]
+  (reduce
+    (fn [sum payment-breakdown]
+      (+ sum (:interest payment-breakdown)))
+    0
+    amortization-schedule))
+
+(defn month-rate->annual-rate
+  "Convert a month compound rate to a annual-rate"
+  [month-rate]
+  (- (Math/pow (+ 1 month-rate) 12) 1))
+
+(defn rate->percent
+  "Convert rate to its percent representation"
+  [rate]
+  (format "%.4f%%" (* rate 100)))
+
+(defn installment-loan-simulation
+  "Return a complete loan simulation with interests and amortization schedule"
+  [capital month-interest-rate period]
+  (let [payment-amount (payment-amount capital month-interest-rate period)
+        annual-interest-rate (month-rate->annual-rate month-interest-rate)
+        amortization-schedule (amortization-schedule-calculator
+                                capital
+                                month-interest-rate
+                                period
+                                payment-amount)
+        total-loan-interest (total-loan-interest amortization-schedule)
+        balance (+ capital total-loan-interest)]
+    {
+     :capital                      (format-with-precision-2 capital)
+     :interest                     (format-with-precision-2 total-loan-interest)
+     :balance                      (format-with-precision-2 balance)
+     :month-interest-rate          (rate->percent month-interest-rate)
+     :annual-interest-rate         (rate->percent annual-interest-rate)
+     :nominal-annual-interest-rate (rate->percent (* month-interest-rate 12))
+     :installments                 (format-to-string-amortization-schedule
+                                     amortization-schedule)}))
