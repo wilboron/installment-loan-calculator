@@ -101,18 +101,18 @@
 
 (defn installment-loan-simulation
   "Return a complete loan simulation with interests and amortization schedule"
-  [capital month-interest-rate period]
-  (let [payment-amount (payment-amount capital month-interest-rate period)
+  [principal month-interest-rate period]
+  (let [payment-amount (payment-amount principal month-interest-rate period)
         annual-interest-rate (month-rate->annual-rate month-interest-rate)
         amortization-schedule (amortization-schedule-calculator
-                                capital
+                                principal
                                 month-interest-rate
                                 period
                                 payment-amount)
         total-loan-interest (total-loan-interest amortization-schedule)
-        balance (+ capital total-loan-interest)]
+        balance (+ principal total-loan-interest)]
     {
-     :capital                      (format-with-precision-2 capital)
+     :capital                      (format-with-precision-2 principal)
      :interest                     (format-with-precision-2 total-loan-interest)
      :balance                      (format-with-precision-2 balance)
      :month-interest-rate          (rate->percent month-interest-rate)

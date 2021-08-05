@@ -6,11 +6,22 @@
   {:status 200
    :body   {}})
 
-(defn calculate-loan-handler
+(defn calculate-amortization-table
   [{{body :body} :parameters}]
   (let [principal (:principal body)
-        interest-rate (/ (:interest_rate body) 100)
+        interest-rate (/ (:interest_rate body) 100.0)
         loan-term (:loan_term body)]
     {:status 200
      :body   (-> (i.l/amortization-schedule principal interest-rate loan-term)
                  i.l/format-to-string-amortization-schedule)}))
+
+
+(defn calculate-loan
+  [{{body :body} :parameters}]
+  (let [principal (:principal body)
+        interest-rate (/ (:interest_rate body) 100.0)
+        loan-term (:loan_term body)]
+    {:status 200
+     :body   (i.l/installment-loan-simulation principal
+                                              interest-rate
+                                              loan-term)}))
