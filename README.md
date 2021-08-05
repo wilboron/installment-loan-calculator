@@ -1,6 +1,8 @@
 # installment_loan_calculator
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure project designed to calculate amortization tables and a installment
+loan.
+Returning amortization tables, rates, total interest value etc.
 
 ## Usage
 
