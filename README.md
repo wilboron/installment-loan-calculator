@@ -47,7 +47,7 @@ Returning the example below:
 **/calculate-loan**
 Used to calculate the amortization table, and more information about the loan
 
-`http POST :3000/calculate-loan principal:=5000 interest_rate:=5 loan_term:=12`
+`http POST :3000/calculate-loan principal:=5000 interest_rate:=5 loan_term:=2`
 
 ```json
 {
