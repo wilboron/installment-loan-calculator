@@ -84,7 +84,7 @@ Used to calculate the amortization table, and more information about the loan
 }
 ```
 
-To keep thing simple, for now the default days between each installment
+To keep things simple, for now the default days between each installment
 is a commercial month (30 days), and the loan start date is the date
 of the request for the simulation.
 
