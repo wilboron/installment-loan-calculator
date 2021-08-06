@@ -1,6 +1,7 @@
-(ns installment-loan-calculator.logic)
+(ns installment-loan-calculator.logic
+  (:require [java-time :as jt]))
 
-
+(refer-clojure)
 (defn- payment-amount
   "Calculate Payment Amount
 
@@ -39,14 +40,18 @@
   [total-loan interest-rate period payment-amount]
   (loop [balance total-loan
          amortizations []
-         current-period 1]
+         current-period 1
+         current-payday (jt/plus (jt/local-date) (jt/days 30))]
     (if (> current-period period)
       amortizations
       (let [payment-breakdown (payment-breakdown balance interest-rate payment-amount)
-            payment-breakdown (assoc payment-breakdown :period current-period)]
+            payment-breakdown (assoc payment-breakdown
+                                :period current-period
+                                :payday (jt/format "dd/MM/yyyy" current-payday))]
         (recur (get payment-breakdown :balance)
                (conj amortizations payment-breakdown)
-               (inc current-period))))))
+               (inc current-period)
+               (jt/plus current-payday (jt/days 30)))))))
 
 
 (defn amortization-schedule
@@ -56,11 +61,11 @@
     (amortization-schedule-calculator total-loan interest-rate period payment-amount)))
 
 (defn- format-with-precision-2
-  "Convert number to string, if float use 2 decimal precision"
+  "Convert values to string, if float use 2 decimal precision"
   [number]
-  (if (integer? number)
-    (str number)
-    (format "%.2f" number)))
+  (if (float? number)
+    (format "%.2f" number)
+    (str number)))
 
 (defn- format-payment-breakdown-to-string
   "Format a payment breakdown map number values to string.

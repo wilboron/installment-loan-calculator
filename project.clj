@@ -8,6 +8,7 @@
                  [ring/ring-devel "1.9.4"]
                  [metosin/reitit "0.5.13"]
                  [ring-logger "1.0.1"]
-                 [ring/ring-mock "0.4.0"]]
+                 [ring/ring-mock "0.4.0"]
+                 [clojure.java-time "0.3.2"]]
   :repl-options {:init-ns installment-loan-calculator.server}
   :main ^:skip-aot installment-loan-calculator.server)
