@@ -11,11 +11,15 @@ It's necessary to install leiningen to run the project, you can now more [here](
 
 With leiningen installed run to install libraries:
 
-`lein deps`
+```shell-session
+lein deps
+```
 
 Then run to start the server:
 
-`lein run`
+```shell-session
+lein run
+```
 
 Currently, the project has two main routes:
 
