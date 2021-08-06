@@ -32,18 +32,20 @@ Returning the example below:
 ```json
 [
   {
-  "balance": "2560.98",
-  "interest": "250.00",
-  "payment": "2689.02",
-  "period": "1",
-  "principal": "2439.02"
+    "balance": "2560.98",
+    "interest": "250.00",
+    "payday": "05/09/2021",
+    "payment": "2689.02",
+    "period": "1",
+    "principal": "2439.02"
   },
   {
-  "balance": "0.00",
-  "interest": "128.05",
-  "payment": "2689.02",
-  "period": "2",
-  "principal": "2560.98"
+    "balance": "0.00",
+    "interest": "128.05",
+    "payday": "05/10/2021",
+    "payment": "2689.02",
+    "period": "2",
+    "principal": "2560.98"
   }
 ]
 ```
@@ -62,6 +64,7 @@ Used to calculate the amortization table, and more information about the loan
     {
       "balance": "2560.98",
       "interest": "250.00",
+      "payday": "05/09/2021",
       "payment": "2689.02",
       "period": "1",
       "principal": "2439.02"
@@ -69,6 +72,7 @@ Used to calculate the amortization table, and more information about the loan
     {
       "balance": "0.00",
       "interest": "128.05",
+      "payday": "05/10/2021",
       "payment": "2689.02",
       "period": "2",
       "principal": "2560.98"
@@ -78,8 +82,16 @@ Used to calculate the amortization table, and more information about the loan
   "month-interest-rate": "5.0000%",
   "nominal-annual-interest-rate": "60.0000%"
 }
-
 ```
+
+To keep thing simple, for now the default days between each installment
+is a commercial month (30 days), and the loan start date is the date
+of the request for the simulation.
+
+
+Using that premise we ensure that the interest in each parcel is calculated
+correctly. Since a longer/shorter period would change the interest in that
+installment.
 
 ## License
 
