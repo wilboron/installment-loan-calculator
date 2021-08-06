@@ -1,16 +1,85 @@
-# installment_loan_calculator
+# Installment Loan Calculator
 
-A Clojure project designed to calculate amortization tables and a installment
-loan.
-Returning amortization tables, rates, total interest value etc.
+A Clojure project designed to calculate amortization tables and installment
+loans using the French amortization schedule (PRICE).
+
+The project it's an API using Ring and Reitit library. With endpoints to return amortization
+tables, rates, total interest value etc.
 
 ## Usage
+It's necessary to install leiningen to run the project, you can now more [here](https://leiningen.org/). 
 
-FIXME
+With leiningen installed run to install libraries:
+
+`lein deps`
+
+Then run to start the server:
+
+`lein run`
+
+Currently, the project has two main routes:
+
+**/calculate-amortization-table**
+Used to calculate only the amortization table, without more information about the loan
+
+Returning the example below:
+
+`http POST :3000/calculate-amortization-table principal:=5000 interest_rate:=5 loan_term:=2`
+```json
+[
+  {
+  "balance": "2560.98",
+  "interest": "250.00",
+  "payment": "2689.02",
+  "period": "1",
+  "principal": "2439.02"
+  },
+  {
+  "balance": "0.00",
+  "interest": "128.05",
+  "payment": "2689.02",
+  "period": "2",
+  "principal": "2560.98"
+  }
+]
+```
+
+**/calculate-loan**
+Used to calculate the amortization table, and more information about the loan
+
+`http POST :3000/calculate-loan principal:=5000 interest_rate:=5 loan_term:=12`
+
+```json
+{
+  "annual-interest-rate": "79.5856%",
+  "balance": "5378.05",
+  "capital": "5000",
+  "installments": [
+    {
+      "balance": "2560.98",
+      "interest": "250.00",
+      "payment": "2689.02",
+      "period": "1",
+      "principal": "2439.02"
+    },
+    {
+      "balance": "0.00",
+      "interest": "128.05",
+      "payment": "2689.02",
+      "period": "2",
+      "principal": "2560.98"
+    }
+  ],
+  "interest": "378.05",
+  "month-interest-rate": "5.0000%",
+  "nominal-annual-interest-rate": "60.0000%"
+}
+
+```
 
 ## License
 
-Copyright © 2021 FIXME
+Copyright © 2021 William Mingardi
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at

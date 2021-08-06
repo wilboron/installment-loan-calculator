@@ -1,7 +1,7 @@
 (ns installment-loan-calculator.logic)
 
 
-(defn payment-amount
+(defn- payment-amount
   "Calculate Payment Amount
 
   Use the mathematical formula below to calculate the
@@ -55,14 +55,14 @@
   (let [payment-amount (payment-amount total-loan interest-rate period)]
     (amortization-schedule-calculator total-loan interest-rate period payment-amount)))
 
-(defn format-with-precision-2
+(defn- format-with-precision-2
   "Convert number to string, if float use 2 decimal precision"
   [number]
   (if (integer? number)
     (str number)
     (format "%.2f" number)))
 
-(defn format-payment-breakdown-to-string
+(defn- format-payment-breakdown-to-string
   "Format a payment breakdown map number values to string.
   If float use 2 decimal precision."
   [payment-breakdown]
