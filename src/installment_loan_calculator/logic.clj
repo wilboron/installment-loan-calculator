@@ -37,11 +37,11 @@
      :balance   (if (neg? new-balance) 0 new-balance)}))
 
 (defn- amortization-schedule-calculator
-  [total-loan interest-rate period payment-amount]
+  [total-loan interest-rate period payment-amount start-date]
   (loop [balance total-loan
          amortizations []
          current-period 1
-         current-payday (jt/plus (jt/local-date) (jt/days 30))]
+         current-payday (jt/plus start-date (jt/days 30))]
     (if (> current-period period)
       amortizations
       (let [payment-breakdown (payment-breakdown balance interest-rate payment-amount)
@@ -56,9 +56,13 @@
 
 (defn amortization-schedule
   "Create amortization schedule for a loan"
-  [total-loan interest-rate period]
+  [total-loan interest-rate period start-date]
   (let [payment-amount (payment-amount total-loan interest-rate period)]
-    (amortization-schedule-calculator total-loan interest-rate period payment-amount)))
+    (amortization-schedule-calculator total-loan
+                                      interest-rate
+                                      period
+                                      payment-amount
+                                      start-date)))
 
 (defn- format-with-precision-2
   "Convert values to string, if float use 2 decimal precision"
@@ -106,14 +110,15 @@
 
 (defn installment-loan-simulation
   "Return a complete loan simulation with interests and amortization schedule"
-  [principal month-interest-rate period]
+  [principal month-interest-rate period start-date]
   (let [payment-amount (payment-amount principal month-interest-rate period)
         annual-interest-rate (month-rate->annual-rate month-interest-rate)
         amortization-schedule (amortization-schedule-calculator
                                 principal
                                 month-interest-rate
                                 period
-                                payment-amount)
+                                payment-amount
+                                start-date)
         total-loan-interest (total-loan-interest amortization-schedule)
         balance (+ principal total-loan-interest)]
     {

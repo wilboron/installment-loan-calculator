@@ -23,8 +23,23 @@ lein run
 
 Currently, the project has two main routes:
 
-**/calculate-amortization-table**
+**POST /calculate-amortization-table**  
 Used to calculate only the amortization table, without more information about the loan
+
+A valid payload to both routes:
+```json
+{
+  "principal": 2000,
+  "interest_rate": 5,
+  "loan_term": 2,
+  "start_date": "24/05/1995"
+}
+```
+Principal is how much is loaned.  
+Interest rate is the monthly effective rate for this loan.  
+Loan term is the loan duration in months.  
+Start date is optional, represent the day the loan will start. If not supplied the current date is assumed.
+
 
 Returning the example below:
 
@@ -50,7 +65,7 @@ Returning the example below:
 ]
 ```
 
-**/calculate-loan**
+**POST /calculate-loan**  
 Used to calculate the amortization table, and more information about the loan
 
 `http POST :3000/calculate-loan principal:=5000 interest_rate:=5 loan_term:=2`
