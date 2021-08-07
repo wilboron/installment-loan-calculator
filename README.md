@@ -7,7 +7,7 @@ The project it's an API using Ring and Reitit library. With endpoints to return 
 tables, rates, total interest value etc.
 
 ## Usage
-It's necessary to install leiningen to run the project, you can now more [here](https://leiningen.org/). 
+It's necessary to install leiningen to run the project, you can learn more [here](https://leiningen.org/). 
 
 With leiningen installed run to install libraries:
 
@@ -21,10 +21,10 @@ Then run to start the server:
 lein run
 ```
 
-Currently, the project has two main routes:
+For the examples used in this readme calling the API, [HTTPie](https://httpie.io/) was used.
 
-**POST /calculate-amortization-table**  
-Used to calculate only the amortization table, without more information about the loan
+
+Currently, the project has two main routes.
 
 A valid payload to both routes:
 ```json
@@ -35,13 +35,15 @@ A valid payload to both routes:
   "start_date": "24/05/1995"
 }
 ```
-Principal is how much is loaned.  
-Interest rate is the monthly effective rate for this loan.  
-Loan term is the loan duration in months.  
-Start date is optional, represent the day the loan will start. If not supplied the current date is assumed.
+**Principal** is how much is loaned.  
+**Interest rate** is the monthly effective rate for this loan.  
+**Loan term** is the loan duration in months.  
+**Start date** is **optional**, represent the day the loan will start. If not supplied the current date is assumed.
 
+**POST /calculate-amortization-table**  
+Used to calculate only the amortization table, without more information about the loan
 
-Returning the example below:
+Return the example below:
 
 `http POST :3000/calculate-amortization-table principal:=5000 interest_rate:=5 loan_term:=2`
 ```json
@@ -100,8 +102,7 @@ Used to calculate the amortization table, and more information about the loan
 ```
 
 To keep things simple, for now the default days between each installment
-is a commercial month (30 days), and the loan start date is the date
-of the request for the simulation.
+is a commercial month (30 days).
 
 
 Using that premise we ensure that the interest in each parcel is calculated
