@@ -6,7 +6,7 @@ loans using the French amortization schedule (PRICE).
 The project it's an API using Ring and Reitit library. With endpoints to return amortization
 tables, rates, total interest value etc.
 
-## Usage
+## Setup
 It's necessary to install leiningen to run the project, you can learn more [here](https://leiningen.org/). 
 
 With leiningen installed run to install libraries:
@@ -23,6 +23,7 @@ lein run
 
 For the examples used in this readme calling the API, [HTTPie](https://httpie.io/) was used.
 
+## Usage
 
 Currently, the project has two main routes.
 
@@ -100,6 +101,8 @@ Used to calculate the amortization table, and more information about the loan
   "nominal-annual-interest-rate": "60.0000%"
 }
 ```
+
+## Notes
 
 To keep things simple, for now the default days between each installment
 is a commercial month (30 days).
