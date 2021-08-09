@@ -18,7 +18,7 @@
 (s/defn date->str :- s/Str
   "Convert java.time.LocalDate to string in format d/M/yyyy"
   [date-str :- LocalDate]
-  (format "dd/MM/yyyy" date-str))
+  (jt/format "dd/MM/yyyy" date-str))
 
 
 (s/defn present-or-future-date? :- s/Bool

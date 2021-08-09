@@ -1,7 +1,6 @@
 (ns installment-loan-calculator.logic
   (:require [java-time :as jt]))
 
-(refer-clojure)
 (defn- payment-amount
   "Calculate Payment Amount
 
@@ -16,13 +15,17 @@
   C = Capital / Present Value
   i = interest rate
   n = period / loan term"
-  [total-loan interest-rate period]
-  (* total-loan
+  [present-value interest-rate period]
+  (* present-value
      (/ (* interest-rate
            (Math/pow (+ 1 interest-rate) period))
         (- (Math/pow (+ 1 interest-rate) period)
            1))))
 
+(defn future-value
+  "Calculate future value"
+  [present-value interest period]
+  (* present-value (Math/pow (+ 1 interest) period)))
 
 (defn- payment-breakdown
   "Breakdown a loan installment in payment amount, interest, principal
@@ -110,17 +113,19 @@
 
 (defn installment-loan-simulation
   "Return a complete loan simulation with interests and amortization schedule"
-  [principal month-interest-rate period start-date]
-  (let [payment-amount (payment-amount principal month-interest-rate period)
+  [principal month-interest-rate period start-date grace-period]
+  (let [principal-after-grace-period (future-value principal month-interest-rate grace-period)
+        start-date (jt/plus start-date (jt/days (* 30 grace-period)))
+        payment-amount (payment-amount principal-after-grace-period month-interest-rate period)
         annual-interest-rate (month-rate->annual-rate month-interest-rate)
         amortization-schedule (amortization-schedule-calculator
-                                principal
+                                principal-after-grace-period
                                 month-interest-rate
                                 period
                                 payment-amount
                                 start-date)
         total-loan-interest (total-loan-interest amortization-schedule)
-        balance (+ principal total-loan-interest)]
+        balance (+ principal-after-grace-period total-loan-interest)]
     {
      :capital                      (format-with-precision-2 principal)
      :interest                     (format-with-precision-2 total-loan-interest)

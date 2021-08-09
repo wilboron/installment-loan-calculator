@@ -33,13 +33,17 @@ A valid payload to both routes:
   "principal": 2000,
   "interest_rate": 5,
   "loan_term": 2,
-  "start_date": "24/05/1995"
+  "start_date": "08/08/2030",
+  "grace_period": 2
 }
 ```
 **Principal** is how much is loaned.  
 **Interest rate** is the monthly effective rate for this loan.  
 **Loan term** is the loan duration in months.  
-**Start date** is **optional**, represent the day the loan will start. If not supplied the current date is assumed.
+**Start date** is **optional**, represent the day the loan will start.
+If not supplied the current date is assumed.  
+**Grace Period** is **optional**, represent the grace period in commercial months.
+If not supplied grace period (0) is assumed.
 
 **POST /calculate-amortization-table**  
 Used to calculate only the amortization table, without more information about the loan
@@ -111,6 +115,32 @@ is a commercial month (30 days).
 Using that premise we ensure that the interest in each parcel is calculated
 correctly. Since a longer/shorter period would change the interest in that
 installment.
+## Notes
+There is two ways <sup>[1](#footnote1)</sup> to calculate loan with grace period:  
+* The borrower pay only the interest accrued during the grace periods each month,
+then start paying the loan with the original principal borrowed.
+* The borrower don't pay anything, and only starting paying after the grace period
+with the interest accrued in the principal.
+
+In this program we will use the second one.  
+Meaning that if I loan 100 000,
+with a 5% monthly interest with a grace period of 2 months the loan will be calculated
+with 110 250 not 100 000 since the interest was accrued in these 2 months.
+
+To keep things simple, for now the default days between each installment
+is a commercial month (30 days).
+
+Using that premise we ensure that the interest in each parcel is calculated
+correctly. Since a longer/shorter period would change the interest in that
+installment.
+
+<br><br>
+
+<a name="footnote1">1</a>: You could argue that there is a third option for loans with 
+grace period where the borrower don't pay anything and start paying the loan with
+the **original principal** without interest accrued.  
+Considering the [time value of money](https://en.wikipedia.org/wiki/Time_value_of_money) I don't think its wise to offer this option since
+it would mean a loss of profit.
 
 ## License
 

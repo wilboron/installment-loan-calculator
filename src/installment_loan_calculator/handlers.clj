@@ -27,10 +27,12 @@
   (let [principal (:principal body)
         interest-rate (/ (:interest_rate body) 100.0)
         loan-term (:loan_term body)
-        start-date (get-start-date-param body)]
+        start-date (get-start-date-param body)
+        months-grace-period (get body :grace_period 0)]
     {:status 200
      :body   (i.l/installment-loan-simulation principal
                                               interest-rate
                                               loan-term
-                                              start-date)}))
+                                              start-date
+                                              months-grace-period)}))
 

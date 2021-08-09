@@ -6,6 +6,8 @@
 (def positive-number-error
   "Must be a positive number")
 
+(def positive-number-error
+  "Must be zero or positive number")
 
 (def rate-error
   "Must be a number between 0 and 100 inclusive")
@@ -31,11 +33,19 @@
           i.du/str->date
           i.du/present-or-future-date?))
 
+(defn zero-or-positive?
+  [number]
+  (or (zero? number)
+      (pos? number)))
+
 
 (s/defschema CalculatorBodySchema
   "Define schema for calculator endpoint POST payload.
   Expect a loan_term, principal and interest_rate"
-  {:loan_term                   (s/constrained s/Int pos? positive-number-error)
-   :principal                   (s/constrained s/Num pos? positive-number-error)
-   :interest_rate               (s/constrained s/Num valid-rate? rate-error)
-   (s/optional-key :start_date) (s/constrained s/Str valid-date? start-date-error)})
+  {:loan_term       (s/constrained s/Int pos? positive-number-error)
+   :principal       (s/constrained s/Num pos? positive-number-error)
+   :interest_rate   (s/constrained s/Num valid-rate? rate-error)
+   (s/optional-key
+     :start_date)   (s/constrained s/Str valid-date? start-date-error)
+   (s/optional-key
+     :grace_period) (s/constrained s/Int zero-or-positive? start-date-error)})
