@@ -1,5 +1,6 @@
 (ns installment-loan-calculator.logic
-  (:require [java-time :as jt]))
+  (:require [java-time :as jt]
+            [installment-loan-calculator.date-utils :as i.du]))
 
 (defn- payment-amount
   "Calculate Payment Amount
@@ -44,17 +45,17 @@
   (loop [balance total-loan
          amortizations []
          current-period 1
-         current-payday (jt/plus start-date (jt/days 30))]
+         current-payday (i.du/next-commercial-month start-date)]
     (if (> current-period period)
       amortizations
       (let [payment-breakdown (payment-breakdown balance interest-rate payment-amount)
             payment-breakdown (assoc payment-breakdown
                                 :period current-period
-                                :payday (jt/format "dd/MM/yyyy" current-payday))]
+                                :payday (i.du/date->str current-payday))]
         (recur (get payment-breakdown :balance)
                (conj amortizations payment-breakdown)
                (inc current-period)
-               (jt/plus current-payday (jt/days 30)))))))
+               (i.du/next-commercial-month current-payday))))))
 
 
 (defn amortization-schedule
@@ -115,7 +116,7 @@
   "Return a complete loan simulation with interests and amortization schedule"
   [principal month-interest-rate period start-date grace-period]
   (let [principal-after-grace-period (future-value principal month-interest-rate grace-period)
-        start-date (jt/plus start-date (jt/days (* 30 grace-period)))
+        start-date (i.du/start-date-with-grace-period start-date grace-period)
         payment-amount (payment-amount principal-after-grace-period month-interest-rate period)
         annual-interest-rate (month-rate->annual-rate month-interest-rate)
         amortization-schedule (amortization-schedule-calculator
