@@ -107,15 +107,6 @@ Used to calculate the amortization table, and more information about the loan
 ```
 
 ## Notes
-
-To keep things simple, for now the default days between each installment
-is a commercial month (30 days).
-
-
-Using that premise we ensure that the interest in each parcel is calculated
-correctly. Since a longer/shorter period would change the interest in that
-installment.
-## Notes
 There is two ways <sup>[1](#footnote1)</sup> to calculate loan with grace period:  
 * The borrower pay only the interest accrued during the grace periods each month,
 then start paying the loan with the original principal borrowed.
