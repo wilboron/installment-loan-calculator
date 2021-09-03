@@ -130,6 +130,91 @@
             body (m/decode "application/json" (get response :body))]
         (is (= status 400))
         (is (= headers {"Content-Type" "application/json; charset=utf-8"}))
+        (is (= (:errors body) {:principal "(not (\"Must be zero or positive number\" -1))"})))))
+  (testing "calculate-loan route"
+    (testing "Success: Loan with 3 terms"
+      (let [response (app-test (->
+                                 (mock/request :post "/calculate-amortization-table")
+                                 (mock/json-body {"principal"     5000,
+                                                  "interest_rate" 5,
+                                                  "loan_term"     3})))
+            status (get response :status)
+            headers (get response :headers)
+            body (m/decode "application/json" (get response :body))]
+        (is (= status 200))
+        (is (= headers {"Content-Type" "application/json; charset=utf-8"}))
+        (is (= body installments))))
+    (testing "Error: Loan with 0 terms"
+      (let [response (app-test (->
+                                 (mock/request :post "/calculate-amortization-table")
+                                 (mock/json-body {"principal"     5000,
+                                                  "interest_rate" 5,
+                                                  "loan_term"     0})))
+            status (get response :status)
+            headers (get response :headers)
+            body (m/decode "application/json" (get response :body))]
+        (is (= status 400))
+        (is (= headers {"Content-Type" "application/json; charset=utf-8"}))
+        (is (= (:errors body) {:loan_term "(not (\"Must be zero or positive number\" 0))"}))))
+    (testing "Error: Loan with 0 interest_rate"
+      (let [response (app-test (->
+                                 (mock/request :post "/calculate-amortization-table")
+                                 (mock/json-body {"principal"     5000,
+                                                  "interest_rate" 0,
+                                                  "loan_term"     3})))
+            status (get response :status)
+            headers (get response :headers)
+            body (m/decode "application/json" (get response :body))]
+        (is (= status 400))
+        (is (= headers {"Content-Type" "application/json; charset=utf-8"}))
+        (is (= (:errors body) {:interest_rate "(not (\"Must be a number between 0 and 100 inclusive\" 0))"}))))
+    (testing "Error: Loan with 0 principal"
+      (let [response (app-test (->
+                                 (mock/request :post "/calculate-amortization-table")
+                                 (mock/json-body {"principal"     0,
+                                                  "interest_rate" 5,
+                                                  "loan_term"     3})))
+            status (get response :status)
+            headers (get response :headers)
+            body (m/decode "application/json" (get response :body))]
+        (is (= status 400))
+        (is (= headers {"Content-Type" "application/json; charset=utf-8"}))
+        (is (= (:errors body) {:principal "(not (\"Must be zero or positive number\" 0))"}))))
+    (testing "Error: Loan with -1 terms"
+      (let [response (app-test (->
+                                 (mock/request :post "/calculate-amortization-table")
+                                 (mock/json-body {"principal"     5000,
+                                                  "interest_rate" 5,
+                                                  "loan_term"     -1})))
+            status (get response :status)
+            headers (get response :headers)
+            body (m/decode "application/json" (get response :body))]
+        (is (= status 400))
+        (is (= headers {"Content-Type" "application/json; charset=utf-8"}))
+        (is (= (:errors body) {:loan_term "(not (\"Must be zero or positive number\" -1))"}))))
+    (testing "Error: Loan with -1 interest_rate"
+      (let [response (app-test (->
+                                 (mock/request :post "/calculate-amortization-table")
+                                 (mock/json-body {"principal"     5000,
+                                                  "interest_rate" -1,
+                                                  "loan_term"     3})))
+            status (get response :status)
+            headers (get response :headers)
+            body (m/decode "application/json" (get response :body))]
+        (is (= status 400))
+        (is (= headers {"Content-Type" "application/json; charset=utf-8"}))
+        (is (= (:errors body) {:interest_rate "(not (\"Must be a number between 0 and 100 inclusive\" -1))"}))))
+    (testing "Error: Loan with -1 principal"
+      (let [response (app-test (->
+                                 (mock/request :post "/calculate-amortization-table")
+                                 (mock/json-body {"principal"     -1,
+                                                  "interest_rate" 5,
+                                                  "loan_term"     3})))
+            status (get response :status)
+            headers (get response :headers)
+            body (m/decode "application/json" (get response :body))]
+        (is (= status 400))
+        (is (= headers {"Content-Type" "application/json; charset=utf-8"}))
         (is (= (:errors body) {:principal "(not (\"Must be zero or positive number\" -1))"}))))))
 
 
