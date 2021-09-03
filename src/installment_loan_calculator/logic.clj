@@ -64,7 +64,8 @@
   "Create amortization schedule for a loan"
   [total-loan interest-rate period start-date grace-period]
   (let [principal-after-grace-period (future-value total-loan interest-rate grace-period)
-        payment-amount (payment-amount total-loan interest-rate period)]
+        payment-amount (payment-amount principal-after-grace-period interest-rate period)
+        start-date (i.du/start-date-with-grace-period start-date grace-period)]
     (amortization-schedule-calculator principal-after-grace-period
                                       interest-rate
                                       period
