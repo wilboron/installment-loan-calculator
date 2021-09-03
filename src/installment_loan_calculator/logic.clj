@@ -1,6 +1,8 @@
 (ns installment-loan-calculator.logic
   (:require [java-time :as jt]
-            [installment-loan-calculator.date-utils :as i.du]))
+            [schema.core :as s]
+            [installment-loan-calculator.date-utils :as i.du])
+  (:import (java.time LocalDate)))
 
 (defn- payment-amount
   "Calculate Payment Amount
@@ -112,9 +114,14 @@
   [rate]
   (format "%.4f%%" (* rate 100)))
 
-(defn installment-loan-simulation
+(s/defn installment-loan-simulation
   "Return a complete loan simulation with interests and amortization schedule"
-  [principal month-interest-rate period start-date grace-period]
+  [principal :- s/Num
+   month-interest-rate :- s/Num
+   period :- s/Num
+   start-date :- LocalDate
+   grace-period :- s/Num]
+
   (let [principal-after-grace-period (future-value principal month-interest-rate grace-period)
         start-date (i.du/start-date-with-grace-period start-date grace-period)
         payment-amount (payment-amount principal-after-grace-period month-interest-rate period)
@@ -127,8 +134,7 @@
                                 start-date)
         total-loan-interest (total-loan-interest amortization-schedule)
         balance (+ principal-after-grace-period total-loan-interest)]
-    {
-     :capital                      (format-with-precision-2 principal)
+    {:capital                      (format-with-precision-2 principal)
      :interest                     (format-with-precision-2 total-loan-interest)
      :balance                      (format-with-precision-2 balance)
      :month-interest-rate          (rate->percent month-interest-rate)
