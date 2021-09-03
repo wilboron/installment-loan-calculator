@@ -62,9 +62,10 @@
 
 (defn amortization-schedule
   "Create amortization schedule for a loan"
-  [total-loan interest-rate period start-date]
-  (let [payment-amount (payment-amount total-loan interest-rate period)]
-    (amortization-schedule-calculator total-loan
+  [total-loan interest-rate period start-date grace-period]
+  (let [principal-after-grace-period (future-value total-loan interest-rate grace-period)
+        payment-amount (payment-amount total-loan interest-rate period)]
+    (amortization-schedule-calculator principal-after-grace-period
                                       interest-rate
                                       period
                                       payment-amount
